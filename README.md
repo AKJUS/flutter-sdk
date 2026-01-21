@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-# Crowdin Flutter SDK [<img src="https://img.shields.io/badge/beta-yellow"/>](https://github.com/crowdin/flutter-sdk)
+# Crowdin Flutter SDK
 
 The Crowdin Flutter SDK enables Over-The-Air (OTA) translation updates, delivering new translations from your Crowdin project directly to users without requiring app store updates. The SDK works on top of Flutter's standard localization system (`flutter_localizations`), providing a seamless bridge between your local ARB files and Crowdin's Content Delivery Network.
 
@@ -60,7 +60,8 @@ This architecture ensures your app always has working translations (from local A
 
 ## Requirements
 
-* Dart >=2.17.0
+* Flutter >=3.22.0
+* Dart >=3.4.0
 
 ## Setup
 
@@ -87,7 +88,7 @@ To manage distributions, open the Crowdin project and go to the *Translations* >
 
   ```yml
   dependencies:
-    crowdin_sdk: ^0.8.1
+    crowdin_sdk: ^1.0.0
 
     flutter_localizations:
       sdk: flutter
@@ -103,16 +104,16 @@ To manage distributions, open the Crowdin project and go to the *Translations* >
   flutter pub run crowdin_sdk:gen
   ```
 
-  This generates `crowdin_localizations.dart` in the `{FLUTTER_PROJECT}/.dart_tool/flutter_gen/gen_l10n` directory. This wrapper class extends Flutter's generated localization classes to integrate Crowdin OTA translations.
-  
+  This generates `crowdin_localizations.dart` in the same directory as your `app_localizations.dart` (by default, in your `arb-dir` directory, e.g., `lib/l10n/`). This wrapper class extends Flutter's generated localization classes to integrate Crowdin OTA translations.
+
   > **Important:** Re-run this command whenever you modify the structure of your ARB files (e.g., add/remove keys or change parameters).
 
 - Update localizationsDelegates in your project:
 
   ```dart
-  import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+  import 'package:your_app/l10n/app_localizations.dart';
   import 'package:crowdin_sdk/crowdin_sdk.dart';
-  import 'package:flutter_gen/gen_l10n/crowdin_localizations.dart';
+  import 'package:your_app/l10n/crowdin_localizations.dart';
   ```
 
   ```dart
@@ -341,15 +342,10 @@ For more information about OAuth authorization in Crowdin, please check [this ar
   - Swedish - `sv`: `sv-SE`
   - Urdu (India) - `ur`: `ur-IN`
 
-- Since flutter tool no longer generate a synthetic package:flutter_gen, please follow 1st way from [Migration Guide](https://docs.flutter.dev/release/breaking-changes/flutter-generate-i10n-source#migration-guide):
-  - Specify synthetic-package: false in the accompanying [l10n.yaml](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization#configuring-the-l10n-yaml-file) file:
-    `synthetic-package: false`
-
-  - The files are generated into the path specified by arb-dir
-    `arb-dir: lib/i18n`
-
-  - Or, specifically provide an output path:
-    `output-dir: lib/src/generated/i18n`
+- **synthetic-package default**: Starting from v1.0.0, the SDK defaults to `synthetic-package: false` to align with Flutter 3.32+ deprecation of the synthetic `flutter_gen` package. If you're upgrading from an earlier version, see the [Migration Guide](https://docs.flutter.dev/release/breaking-changes/flutter-generate-i10n-source#migration-guide):
+  - Add `synthetic-package: false` to your `l10n.yaml` (or rely on the new default)
+  - Update imports from `package:flutter_gen/gen_l10n/...` to your local path (e.g., `package:your_app/l10n/...`)
+  - Run `flutter pub run crowdin_sdk:gen` to regenerate
 
 ## Contributing
 

@@ -18,7 +18,7 @@ class L10nConfig {
     required this.outputLocalizationFile,
     required this.outputDir,
     required this.outputClass,
-    this.syntheticPackage = true,
+    this.syntheticPackage = false,
   });
 
   String get finalOutputDir => syntheticPackage
@@ -41,7 +41,7 @@ class L10nConfig {
 
       String outputClass = yamlGenConfig['output-class'] ?? 'AppLocalizations';
 
-      bool syntheticPackage = yamlGenConfig['synthetic-package'] ?? true;
+      bool syntheticPackage = yamlGenConfig['synthetic-package'] ?? false;
 
       return L10nConfig(
         arbDir: arbDir,
